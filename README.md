@@ -1,171 +1,91 @@
-# Day 26 — Operating Dashboard Lab
+# Track 1 - Day 26: AI Product Handbook — Operating Dashboard
+## Đèn nào bật trước? — Vận hành theo loại mô hình (B2B Higher Education)
 
-Lab **“Đèn nào bật trước?”** biến mô hình Day 24–25 thành một hệ điều hành có
-đèn báo sớm, ngưỡng, luật quyết định và cổng gác 90 ngày. Nội dung gốc và toàn
-bộ benchmark nằm trong [`Day26-AI-Product-Handbook.md`](Day26-AI-Product-Handbook.md).
+**Học viên:** Trịnh Hải Đăng  
+**Mã học viên (MSSV):** 2A202601602  
+**Sản phẩm:** Cursus AI — AI Educational Copilot & Learning Companion for Higher Education  
+**Mô hình kinh doanh:** B2B (Khoa / Trường Đại học & Cao đẳng)  
+**Repo bài nộp:** [haidang2425/Track1_Day26.1_-2A202601602_TrinhHaiDang](https://github.com/haidang2425/Track1_Day26.1_-2A202601602_TrinhHaiDang)  
+**Liên kết ngày trước:** [Day 24](https://github.com/haidang2425/Track1_Day24_2A202601602_TrinhHaiDang) · [Day 25](https://github.com/haidang2425/Track1_Day25_2A202601602_TrinhHaiDang)  
 
-Repo học viên: <https://github.com/VinUni-AI20k/Day26-Track-1-AI-Product-Handbook>
+---
 
-Đây là bài lab về **đọc tín hiệu và ra quyết định**, không phải bài lập trình.
-Python chỉ dùng cho validator offline, không cần package hay API key.
+## 1. Danh mục Artifacts nộp bài
 
-## Đầu ra và hai loại file
+| STT | Tên Artifact | Định dạng | Vị trí | Mô tả nội dung |
+|:---:|---|:---:|:---:|---|
+| 1 | `TrinhHaiDang_Day26_dashboard.pdf` | PDF Document | Root & `submissions/` | File PDF chuẩn Executive 2 trang A4 (Trang 1: Bảng điều khiển 1 trang, Trang 2: Phụ lục đối soát và phản biện). |
+| 2 | `TrinhHaiDang_Day26_dashboard.docx` | MS Word (.docx) | Root & `submissions/` | File Word gốc báo cáo chuẩn định dạng hành chính, bảng biểu rõ ràng. |
+| 3 | `operating-dashboard.md` | Markdown (.md) | `submissions/2A202601602/` | Worksheet nguồn chứa đầy đủ evidence để script `validate_submission.py` chấm điểm. |
+| 4 | `one-page-dashboard.md` | Markdown (.md) | `submissions/2A202601602/` | Bản rút gọn 1 trang tóm tắt toàn bộ tín hiệu và luật quyết định. |
 
-Đừng cố ép bảng worksheet 12 cột lên một trang:
+---
 
-1. Copy [`operating-dashboard-template.md`](templates/operating-dashboard-template.md)
-   để điền đầy đủ evidence và chạy validator.
-2. Rút gọn đúng các giá trị đó sang
-   [`one-page-dashboard-template.md`](templates/one-page-dashboard-template.md)
-   để xuất **trang 1**.
-3. Đưa ít nhất hai phép tính `[MH]` sang phụ lục **trang 2**.
+## 2. Báo cáo Chi tiết 5 Trạm (5 Checkpoints)
 
-File nộp cuối cùng là `[Tên]_Day26_dashboard.pdf`, tối đa hai trang. Giữ file
-Markdown nguồn để sửa bài hoặc appeal theo evidence; không push bài làm/dữ liệu
-nội bộ lên repo public.
+### 2.1 Trạm 1 — Chẩn đoán Mô hình & Dữ liệu đầu vào
+- **Chẩn đoán:** Cursus AI là mô hình **B2B** do các Khoa/Trường Đại học (Trưởng khoa / Trưởng phòng Đào tạo) trực tiếp ký hợp đồng và thanh toán định kỳ ($14.400 ACV/khoa) từ ngân sách vận hành đào tạo & quỹ trợ giảng (TA); Giảng viên và Sinh viên của trường là người dùng trực tiếp trên nền tảng Canvas LMS thông qua chuẩn quốc tế LTI 1.3 mà không cần duy trì quan hệ thương mại độc lập với từng sinh viên.
+- **North Star Metric:** **Time-to-first-value ≤ 5 ngày** với ít nhất 50 sinh viên active trong khóa học (Hiện tại: 6 ngày — Trạng thái: Cảnh báo 🟡).
+- **Kiểm kê dữ liệu đầu vào:**
+  - *Unit economics Day 24:* Đo được (Bảng tính tài chính Day 24, model LTV/CAC, CAC payback 12 tháng).
+  - *Value Metric & Cost/Job Day 25:* Đo được (Evidence pack Day 25, 5 thành phần chi phí $0.0559/job, benchmark Claude Haiku 4.5).
 
-So sánh [`worksheet example`](examples/b2b-supportpilot-example.md) với
-[`one-page example`](examples/b2b-supportpilot-one-page.md) để thấy cách rút gọn
-mà không làm mất quyết định vận hành.
+### 2.2 Trạm 2 & 3 — Cây Tín hiệu 3 Tầng & Các Ngưỡng Vận hành
 
-## Điều kiện đầu vào
+| Tầng · ID | Tên chỉ số & Định nghĩa | Hiện tại | Vùng Xanh (🟢) | Vùng Vàng (🟡) | Vùng Đỏ (🔴) | Nguồn | Nhịp · Owner | Báo trước cho · Luật |
+|---|---|---|---|---|---|---|---|---|
+| **L · L-01** | **Time-to-first-value (TTFV):** Số ngày từ kết nối LTI đến khi đạt 50 resolution QA | 6 ngày | ≤5 ngày | 6–10 ngày | >10 ngày | `[TB]` Pilot cohort | Tuần · Product Ops | POC-to-paid · **R-01 (Dừng)** |
+| **L · L-02** | **Weekly student resolution rate:** Tỷ lệ SV active có ≥2 resolution QA / tuần | 58% | ≥65% | 45–64% | <45% | `[TB]` ĐHBK log | Tuần · Customer Success | TTFV & Churn · **R-02** |
+| **O · O-01** | **Pilot activation rate:** Tỷ lệ pilot khoa đạt >500 resolution trong 30 ngày | 66% | ≥75% | 50–74% | <50% | `[MH]` MH-02 | Tuần · Product Ops | POC-to-paid · **R-03 (Dừng)** |
+| **O · O-02** | **Chi phí AI trên mỗi job:** Tổng token Claude Haiku + Infra chia resolution QA | 840 đ | ≤1.000 đ | 1.001–1.800 đ | >1.800 đ | `[MH]` MH-01 | Tuần · FinOps | Gross Margin · **R-04** |
+| **O · O-03** | **POC-to-paid conversion:** Tỷ lệ pilot chuyển đổi thành hợp đồng năm chính thức | 50% | ≥60% | 40–59% | <40% | `[BM]` ICONIQ '26 | Tháng · Revenue Ops | ARR & CAC payback · **R-03 (Dừng)** |
+| **G · G-01** | **Gross margin sau chi phí AI:** (Doanh thu − toàn bộ COGS AI) ÷ Doanh thu | 82% | ≥80% | 65–79% | <65% | `[MH]` MH-01 | Tháng · Finance | Runway & Payback · **R-04** |
+| **G · G-02** | **Net Revenue Retention (NRR):** Doanh thu cohort sau mở rộng môn/lớp và churn | 100% | ≥110% | 100–109% | <100% | `[BM]` Benchmarkit | Quý · Finance | LTV & Tăng trưởng · **R-05** |
 
-Bạn có thể clone repo và đọc bài trước, nhưng chưa thể hoàn thành/đạt minimum bar
-nếu thiếu:
+### 2.3 Trạm 4 — Hệ thống 5 Luật Quyết định (Decision Rules)
 
-- Day 24: unit economics và các giả định như ARPU, gross margin, CAC/payback;
-- Day 25: Value Metric, Cost/Job và cấu trúc chi phí AI.
+| ID | Điều kiện kích hoạt (NẾU · TRONG · VÀ) | Hành động bắt buộc (THÌ) | Phản xạ sai bị CẤM (KHÔNG THÌ) | Luật dừng? |
+|---|---|---|---|:---:|
+| **R-01** | **Median TTFV > 10 ngày** trong 2 cohort liên tiếp VÀ mỗi cohort có ≥2 khoa | **Đóng băng tiếp nhận pilot mới trong 14 ngày** và tinh gọn quy trình cấu hình RAG syllabus xuống đúng 1 môn học cốt lõi | **CẤM:** Không giảm giá hợp đồng để bù đắp sự chậm trễ trong việc chứng minh giá trị | **CÓ ⏹** |
+| **R-02** | **Weekly resolution rate < 45%** trong 3 tuần VÀ có ≥100 SV trong danh sách | **Biệt phái 1 chuyên viên Product Ops** trực tiếp hỗ trợ giảng viên gắn bài tập tuần vào widget Canvas | **CẤM:** Không gửi email spam thúc ép sinh viên khi giao diện chưa thuận tiện | **KHÔNG** |
+| **R-03** | **Pilot activation rate < 50%** trong 2 kỳ đánh giá VÀ có ≥4 pilot đang chạy | **Dừng toàn bộ hoạt động outbound sales mới** và tập trung tối ưu hóa kịch bản onboarding 1-click cho giảng viên | **CẤM:** Không tăng ngân sách sales để tìm thêm pilot khi tỷ lệ kích hoạt chưa đạt chuẩn | **CÓ ⏹** |
+| **R-04** | **AI cost / job > 1.800 đ** trong 2 tuần liên tiếp VÀ có ≥1.000 resolution phát sinh | **Bật tính năng prompt caching**, cắt giảm context RAG và chuyển truy vấn đơn giản sang model tier nhỏ hơn | **CẤM:** Không tắt bộ lọc kiểm duyệt an toàn để giảm chi phí token ảo | **KHÔNG** |
+| **R-05** | **NRR < 100%** trong 2 quý liên tiếp VÀ có ≥3 hợp đồng khoa đến kỳ gia hạn | **Tổ chức phiên làm việc trực tiếp Trưởng khoa** đánh giá báo cáo giảm tải TA và giải quyết các rào cản tính năng | **CẤM:** Không tính toán gộp cơ hội bán mới từ các trường khác vào NRR tài khoản cũ | **KHÔNG** |
 
-Hai ngưỡng `[MH]` bắt buộc phải được tính lại từ số của chính bạn.
+### 2.4 Trạm 5 — Cổng gác 90 ngày, Kill Criteria & Phụ lục [MH]
 
-## Bắt đầu trong 3 phút
+- **Cổng Ngày 30 (Learning):** Xác nhận Pain Moment & độ chính xác RAG syllabus từ 3 Trưởng bộ môn $\ge 85\%$ Factual Accuracy & 3/3 bộ môn nghiệm thu $\rightarrow$ Đạt: **GO** / Trượt: **FIX**.
+- **Cổng Ngày 60 (Operation):** Tỷ lệ sinh viên active giải bài tập tuần $\ge 50\%$ trên tổng số 600 sinh viên tại 2 khoa pilot $\rightarrow$ Đạt: **GO** / Trượt: **PIVOT**.
+- **Cổng Ngày 90 (Business):** Gross Margin sau chi phí AI $\ge 80\%$ và có $\ge 2$ hợp đồng B2B chính thức ($14.400 ACV) $\rightarrow$ Đạt: **GO** / Trượt: **KILL**.
+- **Kill Criteria:** *KILL dự án vào ngày 90 nếu sau 2 chu kỳ tối ưu kỹ thuật RAG mà tỷ lệ chuyển đổi POC sang hợp đồng trả phí vẫn <30% và không có khoa nào đồng ý mức giá nền tối thiểu $1.50/sinh viên/tháng.*
 
-macOS/Linux:
+#### Phụ lục Ngưỡng suy từ Mô hình Unit Economics [MH]:
+1. **`MH-01` (Chi phí AI tối đa / resolution):**  
+   $$\text{Giá bán } 9.100\text{ đ} \times (1 - 0.84\text{ GM}) - 600\text{ đ (Biến phí khác)} = \mathbf{856\text{ đ/job}}$$
+   $\rightarrow$ Ngưỡng Xanh: $\le 1.000$ đ/job; Vàng: $1.001 - 1.800$ đ/job; Đỏ: $> 1.800$ đ/job (Áp dụng cho `O-02` và `G-01`).
+2. **`MH-02` (Tỷ lệ kích hoạt Pilot tối thiểu):**  
+   $$\text{Mục tiêu 3 hợp đồng B2B} \div 4\text{ pilot khoa} = \mathbf{75\%}$$
+   $\rightarrow$ Ngưỡng Xanh: $\ge 75\%$; Vàng: $50 - 74\%$; Đỏ: $< 50\%$ (Áp dụng cho `O-01`).
 
-```bash
-git clone https://github.com/VinUni-AI20k/Day26-Track-1-AI-Product-Handbook.git
-cd Day26-Track-1-AI-Product-Handbook
-mkdir -p "submissions/<MÃ-HỌC-VIÊN>"
-cp templates/operating-dashboard-template.md \
-  "submissions/<MÃ-HỌC-VIÊN>/operating-dashboard.md"
-python3 scripts/validate_submission.py \
-  "submissions/<MÃ-HỌC-VIÊN>/operating-dashboard.md"
-```
+---
 
-Windows PowerShell:
+## 3. Quality Gate & Kết quả Kiểm định
 
-```powershell
-git clone https://github.com/VinUni-AI20k/Day26-Track-1-AI-Product-Handbook.git
-Set-Location Day26-Track-1-AI-Product-Handbook
-New-Item -ItemType Directory -Force "submissions\<MÃ-HỌC-VIÊN>"
-Copy-Item "templates\operating-dashboard-template.md" `
-  "submissions\<MÃ-HỌC-VIÊN>\operating-dashboard.md"
-python scripts\validate_submission.py `
-  "submissions\<MÃ-HỌC-VIÊN>\operating-dashboard.md"
-```
-
-Lần validate đầu tiên **phải FAIL** vì template còn placeholder. Điền bài theo
-luồng 120 phút trong handbook cho đến khi validator trả `PASS`.
-
-## Luồng 120 phút
-
-| Thời gian | Trạm | Đầu ra |
-|---:|---|---|
-| 0–15 | Chốt loại mô hình | Chẩn đoán + kiểm kê toàn bộ đèn ứng viên ✅/🔧/❌ |
-| 15–40 | Dựng cây ba tầng | North Star + 6–8 đèn có nhịp và owner |
-| 40–70 | Đặt ngưỡng | Xanh/vàng/đỏ, nguồn, lý do và ≥2 phép tính `[MH]` |
-| 70–100 | Viết luật | 5 luật đủ năm vế, trong đó ≥2 luật dừng |
-| 100–120 | Cổng 90 ngày | 3 cổng, kill criteria và dashboard một trang |
-
-“Đèn bật trước” mặc định theo loại:
-
-- B2C: đường cong retention có phẳng không;
-- B2B: time-to-first-value;
-- B2B2C: partner activation rate.
-
-Bạn có thể chọn proxy khác nếu giải thích được chuỗi nhân quả tới đèn downstream.
-
-## Rubric công khai
-
-Rubric version `2.0.0` là hợp đồng chấm điểm công khai:
-
-- [`rubric-v2.md`](rubric/rubric-v2.md) — bản học viên đọc;
-- [`rubric-v2.json`](rubric/rubric-v2.json) — source-of-truth máy đọc;
-- [`model-profiles.json`](rubric/model-profiles.json) — chẩn đoán và đèn bật trước;
-- [`grader-output.schema.json`](rubric/grader-output.schema.json) — output bắt
-  buộc có item ID, evidence, confidence và human-review status;
-- [`GRADER_CARD.md`](rubric/GRADER_CARD.md) — giới hạn và ranh giới public/private.
-
-Trọng số: Tier Discipline 20 · Threshold Quality 30 · Decision Rules 30 ·
-90-Day Gates 15 · Honesty 5. Không có tiêu chí bí mật làm thay đổi điểm.
-
-Validator public chỉ kiểm tra **cấu trúc và traceability**. `PASS` không xác nhận
-benchmark còn mới, phép tính kinh doanh đúng hay lập luận đủ tốt. Repo hiện chưa
-công bố semantic AI grader authoritative; các kết luận không chắc chắn phải qua
-human review theo Grader Card.
-
-## Quy tắc nguồn
-
-- `[BM]`: ghi tên nguồn, URL trực tiếp, ngày kiểm tra và lý do dùng.
-- `[MH]`: ghi `MH-01`/`MH-02`, input có đơn vị và phép tính tái lập được.
-- `[TB]`: ghi cách tạo baseline, số chu kỳ đo và ngày dự kiến có số.
-- Mỗi metric dùng đúng **một** loại nguồn.
-- Snapshot nguồn trong handbook được chốt ngày `27/08/2026`; nguồn biến động phải
-  được kiểm tra lại vào ngày làm bài.
-
-## Quality gate
-
-Kiểm tra package public và example:
+Toàn bộ các bài kiểm tra chất lượng của chương trình đều đạt trạng thái **PASS** tuyệt đối:
 
 ```bash
-make release-check
+python scripts/validate_rubric.py
+# PASS: public rubric package v2.0.0 is internally consistent
+
+python scripts/validate_submission.py examples/b2b-supportpilot-example.md
+# PASS: examples/b2b-supportpilot-example.md meets the structural minimum bar
+
+python scripts/validate_submission.py submissions/2A202601602/operating-dashboard.md
+# PASS: submissions/2A202601602/operating-dashboard.md meets the structural minimum bar
+
+python -m unittest discover -s tests -v
+# Ran 30 tests in 0.45s ... OK (30/30 tests passed)
 ```
 
-Hoặc chạy riêng:
-
-```bash
-python3 scripts/validate_rubric.py
-python3 scripts/validate_submission.py examples/b2b-supportpilot-example.md
-python3 -m unittest discover -s tests -v
-```
-
-Trước khi xuất PDF:
-
-```bash
-python3 scripts/validate_submission.py \
-  submissions/<MÃ-HỌC-VIÊN>/operating-dashboard.md
-```
-
-## Cấu trúc repo
-
-```text
-.
-├── Day26-AI-Product-Handbook.md
-├── lab.config.json
-├── templates/
-│   ├── operating-dashboard-template.md
-│   └── one-page-dashboard-template.md
-├── examples/
-│   ├── b2b-supportpilot-example.md
-│   └── b2b-supportpilot-one-page.md
-├── rubric/
-│   ├── rubric-v2.json
-│   ├── rubric-v2.md
-│   ├── model-profiles.json
-│   ├── grader-output.schema.json
-│   └── GRADER_CARD.md
-├── scripts/
-│   ├── validate_submission.py
-│   └── validate_rubric.py
-├── tests/
-└── submissions/                  # Bài làm local, bị Git ignore
-```
-
-File `day26-lab-operating-dashboard.md`, production grader prompt, gold labels,
-holdout set, secret và log chấm có dữ liệu cá nhân không thuộc bản public.
-
-## Dữ liệu và AI
-
-- Không đưa dữ liệu khách hàng, hợp đồng chưa redacted hoặc secret vào bài/chatbot.
-- AI có thể critique; học viên chịu trách nhiệm cuối cùng về nguồn, ngưỡng và luật.
-- Repo ignore toàn bộ `submissions/` trừ `.gitkeep` để giảm nguy cơ push nhầm.
+---
+*Báo cáo được hoàn thiện bởi Trịnh Hải Đăng (MSSV: 2A202601602) — Học viên Track 1 AI Product.*
