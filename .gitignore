@@ -5,8 +5,6 @@
 /gold/private-calibration/
 
 # Student work and exported evidence
-/submissions/*
-!/submissions/.gitkeep
 /out/
 /dist/
 /build/
